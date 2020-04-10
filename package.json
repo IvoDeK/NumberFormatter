@@ -1,0 +1,23 @@
+{
+  "name": "numberformatter",
+  "version": "0.0.1",
+  "description": "A simple module to format and deformat numbers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IvoDeK/NumberFormatter.git"
+  },
+  "keywords": [
+    "Numbers",
+    "formatting"
+  ],
+  "author": "IvoDeK",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IvoDeK/NumberFormatter/issues"
+  },
+  "homepage": "https://github.com/IvoDeK/NumberFormatter#readme"
+}
