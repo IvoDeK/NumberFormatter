@@ -8,7 +8,6 @@ let y = d * 365.25;
 let de = y * 10;
 let c = de * 10;
 
-
 const toMillisecondsConverter = {
     ms: number => number,
     s: number => number * s,
@@ -67,7 +66,7 @@ const translateTimeKeys = {
     c: "century",
 };
 
-const toMilliseconds = object => Object.entries(object).reduce((milliseconds, [key, number])=> {
+module.exports.toMilliseconds = object => Object.entries(object).reduce((milliseconds, [key, number])=> {
     if(typeof number !== "number") throw new Error(`This doesn't include a variable`);
     if(!Object.keys(toMillisecondsConverter).find(keys => keys === key.toLowerCase())) key = translateTimeKeys[key.toLowerCase()];
     if(!key) throw new Error(`That format is not supported!`);
@@ -81,7 +80,7 @@ const toMilliseconds = object => Object.entries(object).reduce((milliseconds, [k
  * 
  */
 
-const toFormatMilliseconds = function(number, options) {
+module.exports.toFormatMilliseconds = function(number, options) {
     number = Math.abs(number);
     if(number <= 0) return "Zero";
     let formatted = [];
@@ -144,7 +143,7 @@ const translateNumberKeys = {
     s: "sextillion"
 };
 
-const toNumber = object => Object.entries(object).reduce((totalNumber, [key, number]) => {
+module.exports.toNumber = object => Object.entries(object).reduce((totalNumber, [key, number]) => {
     if(typeof number !== "number") throw new Error(`This doesn't include a variable`);
     if(!Object.keys(toNumbersConverter).find(keys => keys === key.toLowerCase())) key = translateNumberKeys[key.toLowerCase()];
     if(!key) throw new Error(`That format is not supported!`);
@@ -154,27 +153,28 @@ const toNumber = object => Object.entries(object).reduce((totalNumber, [key, num
 /**
  * 
  * @param {Number} number
- * @param {boolean} options
- * @param {boolean} options2
+ * @param {Object} [options]
  * 
  */
 
-const toFormattedNumbers = function (number, options, options2) {
+module.exports.toFormattedNumbers = function (number, options) {
+    options = options || {long: false,longNumber: false};
     number = Math.abs(number);
     if(number < 1000) return number;
     let formatted = [];
     for(let [key, value] of Object.entries(toFormattedNumbersConverter)) {
-        value = toFormattedNumbersConverter[key](number, options2 ? 0:1);
+        value = toFormattedNumbersConverter[key](number, options.longNumber ? 0:1);
         if(value > 1) {
-            if(options) formatted.push(`${value} ${translateNumberKeys[key]}`);
+            if(options.long) formatted.push(`${value} ${translateNumberKeys[key]}`);
             else formatted.push(value + key);
         }
     }
     return formatted[0];
 };
 
- //Test
+/*//Test
 console.log("\n" + toMilliseconds({week: 40, year: 1}) + "\n");
 console.log(toFormatMilliseconds(55e12, true) + "\n");
 console.log(toNumber({million: 32, thousand: 3}) + "\n");
-console.log(toFormattedNumbers(3000, false, false) + "\n");
+console.log(toFormattedNumbers(3000, {long: true,longNumber: true}) + "\n");
+ */
