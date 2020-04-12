@@ -5,6 +5,9 @@ let d = h * 24;
 let w = d * 7;
 let mo = d * 1461/48;
 let y = d * 365.25;
+let de = y * 10;
+let c = de * 10;
+
 
 const toMillisecondsConverter = {
     ms: number => number,
@@ -14,17 +17,21 @@ const toMillisecondsConverter = {
     d: number => number * d,
     w: number => number * w,
     mo: number => number * mo,
-    y: number => number * y
+    y: number => number * y,
+    de: number => number * de,
+    c: number => number * c,
 };
 
 const toFormattedMillisecondsConverter = {
+    c: number => Math.floor(number/c),
+    de: number => Math.floor(number/de),
     y: number => Math.floor(number/y),
     mo: number => Math.floor(number/mo),
     w: number => Math.floor(number/w),
     d: number => Math.floor(number/d),
     h: number => Math.floor(number/h),
     m: number => Math.floor(number/m),
-    s: number => Math.floor(number/s)
+    s: number => Math.floor(number/s),
 };
 
 const translateTimeKeys = {
@@ -44,6 +51,10 @@ const translateTimeKeys = {
     months: "mo",
     year: "y",
     years: "y",
+    decade: "de",
+    decades: "de",
+    century: "c",
+    centuries: "c",
     ms: "millisecond",
     s: "second",
     m: "minute",
@@ -51,7 +62,9 @@ const translateTimeKeys = {
     d: "day",
     w: "week",
     mo: "month",
-    y: "year"
+    y: "year",
+    de: "decade",
+    c: "century",
 };
 
 const toMilliseconds = object => Object.entries(object).reduce((milliseconds, [key, number])=> {
@@ -76,13 +89,15 @@ const toFormatMilliseconds = function(number, options) {
         value = toFormattedMillisecondsConverter[key](number);
         number -= toMillisecondsConverter[key](value);
         if(value > 0) {
-            if(options) formatted.push(`${value} ${translateTimeKeys[key]}${(value > 1)? "s":""}`);
+            if(options) {
+                if(key === "c" && value > 1) {formatted.push(`${value} centuries`); break;}
+                formatted.push(`${value} ${translateTimeKeys[key]}${(value > 1) ? "s" : ""}`);
+            }
             else formatted.push(value + key);
         } 
     }
     return formatted.join(" ");
 };
-
 
 let k = 1000;
 let mi = k * k;
@@ -103,13 +118,13 @@ const toNumbersConverter = {
 };
 
 const toFormattedNumbersConverter = {
-    s: number => (number/sx).toFixed(1),
-    qt: number => (number/qt).toFixed(1),
-    qd: number => (number/qd).toFixed(1),
-    t: number => (number/t).toFixed(1),
-    b: number => (number/b).toFixed(1),
-    m: number => (number/mi).toFixed(1),
-    k: number => (number/k).toFixed(1) 
+    s: (number, x) => (number/sx).toFixed(x),
+    qt: (number, x) => (number/qt).toFixed(x),
+    qd: (number, x) => (number/qd).toFixed(x),
+    t: (number, x) => (number/t).toFixed(x),
+    b: (number, x) => (number/b).toFixed(x),
+    m: (number, x) => (number/mi).toFixed(x),
+    k: (number, x) => (number/k).toFixed(x),
 };
 
 const translateNumberKeys = {
@@ -133,23 +148,23 @@ const toNumber = object => Object.entries(object).reduce((totalNumber, [key, num
     if(typeof number !== "number") throw new Error(`This doesn't include a variable`);
     if(!Object.keys(toNumbersConverter).find(keys => keys === key.toLowerCase())) key = translateNumberKeys[key.toLowerCase()];
     if(!key) throw new Error(`That format is not supported!`);
-    return totalNumber + toNumbersConverter[key](number);
-
+    return totalNumber + toNumbersConverter[key](Math.abs(number));
 }, 0);
 
 /**
  * 
  * @param {Number} number
  * @param {boolean} options
+ * @param {boolean} options2
  * 
  */
 
-const toFormattedNumbers = function (number, options) {
+const toFormattedNumbers = function (number, options, options2) {
     number = Math.abs(number);
     if(number < 1000) return number;
     let formatted = [];
     for(let [key, value] of Object.entries(toFormattedNumbersConverter)) {
-        value = toFormattedNumbersConverter[key](number);
+        value = toFormattedNumbersConverter[key](number, options2 ? 0:1);
         if(value > 1) {
             if(options) formatted.push(`${value} ${translateNumberKeys[key]}`);
             else formatted.push(value + key);
@@ -158,7 +173,8 @@ const toFormattedNumbers = function (number, options) {
     return formatted[0];
 };
 
+ //Test
 console.log("\n" + toMilliseconds({week: 40, year: 1}) + "\n");
-console.log(toFormatMilliseconds(5500000000000, true) + "\n");
+console.log(toFormatMilliseconds(55e12, true) + "\n");
 console.log(toNumber({million: 32, thousand: 3}) + "\n");
-console.log(toFormattedNumbers(5600000000000, true) + "\n");
+console.log(toFormattedNumbers(3000, false, false) + "\n");
