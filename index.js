@@ -172,9 +172,25 @@ module.exports.toFormattedNumbers = function (number, options) {
     return formatted[0];
 };
 
-/*//Test
-console.log("\n" + toMilliseconds({week: 40, year: 1}) + "\n");
-console.log(toFormatMilliseconds(55e12, true) + "\n");
-console.log(toNumber({million: 32, thousand: 3}) + "\n");
-console.log(toFormattedNumbers(3000, {long: true,longNumber: true}) + "\n");
+/**
+ * 
+ * @param {Number} number
+ * @param {Object} [options]
+ * 
  */
+
+module.exports.toFormatNumber = function (number, options) {
+    options = options || {dot: false};
+    number = Math.round(number);
+    
+    if(number.length <= 3) return number;
+    
+    number = number.toString().split("").reverse();
+    let tempNumber = [];
+    
+    for (let i = 0; i < number.length; i++) {
+        (i+1)%3 ? tempNumber.push(number[i]):tempNumber.push(number[i]) && (i+1 === number.length) ? null:tempNumber.push(options.dot? ".":",");
+    }
+    
+    return tempNumber.reverse().join("");
+};

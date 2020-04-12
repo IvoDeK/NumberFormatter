@@ -27,6 +27,6 @@ nf.toFormattedNumbers(120983210948012874129714981, {long: true, longNumber: true
 
 //Format Number with dots/commas
 console.log("\n\nAdd formatting to a numbers line\n",
-nf.toFormatNumber(192873129837123.6, {point: false}), "\n",
-nf.toFormatNumber(19212123123131, {point: true}));
+nf.toFormatNumber(192873129837123.6, {dot: false}), "\n",
+nf.toFormatNumber(19212123123131, {dot: true}));
 
