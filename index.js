@@ -69,7 +69,7 @@ const translateTimeKeys = {
 module.exports.toMilliseconds = object => Object.entries(object).reduce((milliseconds, [key, number])=> {
     if(typeof number !== "number") return milliseconds;
     if(!Object.keys(toMillisecondsConverter).find(keys => keys === key.toLowerCase())) key = translateTimeKeys[key.toLowerCase()];
-    if(!key) throw new Error(`That format is not supported!`);
+    if(!key) return milliseconds;
     return milliseconds + toMillisecondsConverter[key](number);
 }, 0);
 
@@ -146,7 +146,7 @@ const translateNumberKeys = {
 module.exports.toNumber = object => Object.entries(object).reduce((totalNumber, [key, number]) => {
     if(typeof number !== "number") return totalNumber;
     if(!Object.keys(toNumbersConverter).find(keys => keys === key.toLowerCase())) key = translateNumberKeys[key.toLowerCase()];
-    if(!key) throw new Error(`That format is not supported!`);
+    if(!key) return totalNumber;
     return totalNumber + toNumbersConverter[key](Math.abs(number));
 }, 0);
 
