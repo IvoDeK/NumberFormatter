@@ -36,6 +36,8 @@ const toFormattedMillisecondsConverter = {
 const translateTimeKeys = {
     millisecond: "ms",
     milliseconds: "ms",
+    sec: "s",
+    secs: "s",
     second: "s",
     seconds: "s",
     minute: "m",
