@@ -40,6 +40,8 @@ const translateTimeKeys = {
     secs: "s",
     second: "s",
     seconds: "s",
+    min: "m",
+    mins: "m",
     minute: "m",
     minutes: "m",
     hour: "h",
